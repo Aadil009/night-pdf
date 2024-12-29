@@ -1,7 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@font-face {
+  font-family: 'CabinSketchBold';
+  src: url('/fonts/CabinSketch-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'K2DMedium';
+  src: url('/fonts/K2D-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.custom-font {
+  font-family: 'CabinSketchBold', sans-serif;
+}
+.custom-font-description {
+  font-family: 'K2DMedium', sans-serif;
+}
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -10,7 +27,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #fff;
   }
 }
 
