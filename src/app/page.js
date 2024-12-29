@@ -20,7 +20,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="custom-font text-2xl font-bold text-gray-900 dark:text-white">NightPDF.com</h1>
+            <img src="/images/NightPdf.png" alt="Logo" className="h-20 w-auto" />
+              {/* <h1 className="custom-font text-2xl font-bold text-gray-900 dark:text-white">NightPDF.com</h1> */}
             </div>
             {/* <div className="flex items-center space-x-4">
               <a href="https://github.com/Aadil009" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
