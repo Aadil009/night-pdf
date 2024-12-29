@@ -4,8 +4,6 @@ import PDFViewer from '@/app/components/PDFViewer'
 import FileUpload from '@/app/components/FileUpload'
 import ThemeToggle from '@/app/components/ThemeToggle'
 import { Github } from 'lucide-react';
-import { Inter } from '@next/font/google'
-const inter = Inter({ subsets: ['latin'], weight: ['400'] })
 export default function Home() {
   const [pdfFile, setPdfFile] = useState(null);
   const [fileName, setFileName] = useState('');
