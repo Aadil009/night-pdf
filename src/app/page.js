@@ -45,14 +45,14 @@ export default function Home() {
               <h1 className={`custom-font text-2xl font-bold ${colors.text}`}>NightPDF.com</h1>
             </div>
             <div className="flex items-center space-x-4">
-              {pdfFile && (
+              {/* {pdfFile && (
                 <button
                   onClick={handleClear}
                   className="px-3 py-1 custom-font-description text-red-600 bg-red-50 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   Clear PDF
                 </button>
-              )}
+              )} */}
               <a href="https://github.com/Aadil009/night-pdf" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                 <Github className="h-6 w-6" />
               </a>
@@ -77,6 +77,7 @@ export default function Home() {
             <PDFViewer
               file={pdfFile}
               fileName={fileName}
+              handleClear={handleClear}
             />
           </div>
         )}

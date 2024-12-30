@@ -4,7 +4,7 @@ import { Document, Page, pdfjs } from 'react-pdf'
 import { Download, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from 'lucide-react'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`
 
-export default function PDFViewer({ file, fileName }) {
+export default function PDFViewer({ file, fileName, handleClear }) {
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [scale, setScale] = useState(1.0)
@@ -21,7 +21,7 @@ export default function PDFViewer({ file, fileName }) {
   }
   return (
     <div className="pdf-viewer w-full h-full flex flex-col">
-      <div className="controls mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg flex flex-wrap items-center justify-between gap-4">
+      <div className="controls mb-4 p-4 bg-gray-100 dark:bg-gradient-to-r from-[#000] to-[#000] rounded-lg flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setScale(prev => Math.max(0.5, prev - 0.1))}
@@ -39,6 +39,12 @@ export default function PDFViewer({ file, fileName }) {
             <ZoomIn className="w-5 h-5" />
           </button>
         </div>
+        <button
+          onClick={handleClear}
+          className="p-2 rounded-lg bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors"
+        >
+          Clear PDF
+        </button>
 
         <div className="flex items-center space-x-4">
           <span className="text-sm">Page {pageNumber} of {numPages}</span>
@@ -46,7 +52,7 @@ export default function PDFViewer({ file, fileName }) {
       </div>
 
       <div
-        className="pdf-container flex-1 bg-white dark:bg-gray-800 rounded-lg p-4 mt-4 overflow-hidden"
+        className="pdf-container flex-1 bg-white dark:bg-gradient-to-r from-[#000] to-[#292929] rounded-lg p-4 mt-4 overflow-hidden"
         style={{
           width: '100%',
           height: 'calc(100vh - 200px)'
