@@ -1,7 +1,7 @@
 'use client'
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import { Download, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from 'lucide-react'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`
 
 export default function PDFViewer({ file, fileName }) {
@@ -9,62 +9,18 @@ export default function PDFViewer({ file, fileName }) {
   const [pageNumber, setPageNumber] = useState(1)
   const [scale, setScale] = useState(1.0)
   const [isGenerating, setIsGenerating] = useState(false)
-  const canvasRefs = useRef([])
+  const [pageWidth, setPageWidth] = useState(null)
+  const handleDoubleTap = () => {
+    setScale(prev => Math.min(3, prev + 0.1))
+  }
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages)
-    canvasRefs.current = Array(numPages).fill(null).map(() => React.createRef());
   }
-  const darkModeStyles = {
-    filter: 'invert(1) hue-rotate(180deg)',
-    background: '#ffffff'
-  }
-  const downloadDarkPDF = async () => {
-    try {
-      setIsGenerating(true)
-      const { jsPDF } = await import('jspdf')
-      const html2canvas = await import('html2canvas')
-      const pdf = new jsPDF()
-      pdf.setFont('helvetica')
-      pdf.setFontSize(10)
-      pdf.setTextColor(150)
-      pdf.text('Created with NightPDF', 10, 10)
-      const pageToCanvas = async (pageNumber) => {
-        const pageElement = document.querySelector(`#page-${pageNumber}`)
-        if (!pageElement) return null
-        const canvas = await html2canvas.default(pageElement, {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff'
-        })
-        return canvas
-      }
-      for (let i = 1; i <= numPages; i++) {
-        const canvas = await pageToCanvas(i)
-        if (canvas) {
-          if (i > 1) {
-            pdf.addPage()
-            pdf.setFont('helvetica')
-            pdf.setFontSize(10)
-            pdf.setTextColor(150)
-            pdf.text('Created with NightPDF', 10, 10)
-          }
-          const imgData = canvas.toDataURL('image/jpeg', 1.0)
-          const pdfWidth = pdf.internal.pageSize.getWidth()
-          const pdfHeight = pdf.internal.pageSize.getHeight()
-          pdf.addImage(imgData, 'JPEG', 0, 15, pdfWidth, pdfHeight - 15, undefined, 'FAST')
-        }
-      }
-      pdf.save(`NightPDF-${fileName || 'converted'}.pdf`)
-    } catch (error) {
-      console.error('Error generating PDF:', error)
-      alert('There was an error generating the PDF. Please try again.')
-    } finally {
-      setIsGenerating(false)
-    }
+  const onPageLoadSuccess = ({ width }) => {
+    setPageWidth(width)
   }
   return (
-    <div className="pdf-viewer">
+    <div className="pdf-viewer w-full h-full flex flex-col">
       <div className="controls mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center space-x-2">
           <button
@@ -76,46 +32,48 @@ export default function PDFViewer({ file, fileName }) {
           </button>
           <span className="px-2">{Math.round(scale * 100)}%</span>
           <button
-            onClick={() => setScale(prev => Math.min(2, prev + 0.1))}
+            onClick={() => setScale(prev => Math.min(3, prev + 0.1))}
             className="p-2 rounded-lg bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors"
             title="Zoom In"
           >
             <ZoomIn className="w-5 h-5" />
           </button>
         </div>
+
         <div className="flex items-center space-x-4">
           <span className="text-sm">Page {pageNumber} of {numPages}</span>
-          {/* <button
-            onClick={downloadDarkPDF}
-            disabled={isGenerating}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors disabled:opacity-50"
-          >{isGenerating ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>Generating...</span>
-            </>
-          ) : (<>
-            <Download className="w-4 h-4" />
-            <span>Download Dark PDF</span>
-          </>
-          )}
-          </button> */}
         </div>
       </div>
-      <div className="pdf-container bg-white dark:bg-gray-800 rounded-lg p-4" style={darkModeStyles}>
-        <Document
-          file={file}
-          onLoadSuccess={onDocumentLoadSuccess}
-          className="flex justify-center"
-        ><Page
-            id={`page-${pageNumber}`}
-            pageNumber={pageNumber}
-            scale={scale}
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-            className="shadow-lg"
-          /></Document>
+
+      <div
+        className="pdf-container flex-1 bg-white dark:bg-gray-800 rounded-lg p-4 mt-4 overflow-hidden"
+        style={{
+          width: '100%',
+          height: 'calc(100vh - 200px)'
+        }}
+        onDoubleClick={handleDoubleTap}
+      >
+        <div className="h-full w-full overflow-auto dark:invert dark:hue-rotate-180">
+          <div className="min-w-fit flex justify-center">
+            <Document
+              file={file}
+              onLoadSuccess={onDocumentLoadSuccess}
+              className="flex justify-center"
+            >
+              <div className="relative">
+                <Page
+                  pageNumber={pageNumber}
+                  scale={scale}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  className="shadow-lg"
+                />
+              </div>
+            </Document>
+          </div>
+        </div>
       </div>
+
       <div className="pagination mt-4 flex justify-center gap-2">
         <button
           disabled={pageNumber <= 1}

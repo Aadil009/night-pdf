@@ -11,10 +11,10 @@ export default function FileUpload({ onFileSelect }) {
   }
   return (
     <div className="w-full max-w-md">
-      <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
+      <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gradient-to-b from-[#232526] to-[#414345] dark:bg-gradient-to-b from-[#232526] to-[#414345] hover:bg-gray-100 dark:hover:bg-gray-600">
         <div className="flex flex-col items-center justify-center pt-5 pb-6">
           <Upload className="w-10 h-10 mb-3 text-gray-400" />
-          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mb-2 custom-font-description text-sm text-gray-100 dark:text-gray-100">
             <span className="font-semibold">Click to upload</span> or drag and drop
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">PDF (MAX. 10MB)</p>
